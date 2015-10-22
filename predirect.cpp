@@ -41,10 +41,7 @@ int main( int argc, char *argv[] ) {
     string cmd;
     string curdir = filename.substr(0, filename.find_last_of('\\')+1);
 	string exename = filename.substr(filename.find_last_of('\\') + 1, filename.length() - curdir.length());
-	filename = curdir;
-	filename.append("\\");
-	filename.append(exename);
-	filename.append(".predirect.config");
+	filename = curdir.append(exename).append(".predirect.config");
     
     // open the config file
     ifstream configfile(filename);
@@ -53,7 +50,7 @@ int main( int argc, char *argv[] ) {
         getline(configfile, cmd);
         configfile.close();
     } else {
-        cout << "Configuration " << filename << " not found\n";
+        cerr << "Configuration " << filename << " not found\n";
         return -1;
     }
 
@@ -64,15 +61,13 @@ int main( int argc, char *argv[] ) {
 		targetproc.close();
 	}
 	else {
-		string cmdInCurrentDir = curdir;
-		cmdInCurrentDir.append("\\");
-		cmdInCurrentDir.append(cmd);
+		string cmdInCurrentDir = curdir.append(cmd);
 		ifstream targetproccur(cmdInCurrentDir);
 		if (targetproccur.good()) {
 			cmd = cmdInCurrentDir;
 		}
 		else {
-			cout << cmdInCurrentDir << " not found\n";
+			cerr << cmdInCurrentDir << " not found\n";
 			return false;
 		}
 	}
@@ -87,6 +82,7 @@ int main( int argc, char *argv[] ) {
     }
 	std::string args = argBuilder.str();
 
+	// set up child process
     STARTUPINFO startupInfo;
 	memset(&startupInfo, 0, sizeof(STARTUPINFO));
     PROCESS_INFORMATION processInfo;
@@ -101,7 +97,7 @@ int main( int argc, char *argv[] ) {
     
     // call our real proc .exe
     if (!CreateProcess(cmd.c_str(), (LPSTR)args.c_str(), 0, 0, TRUE, CREATE_SUSPENDED, 0, NULL, &startupInfo, &processInfo)) {
-		cout << "Error starting process: " << cmd.c_str() << "\n";
+		cerr << "Error starting process: " << cmd.c_str() << "\n";
 		return -1;
 	}
     threadId = processInfo.hThread;
