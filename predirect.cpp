@@ -1,5 +1,20 @@
 // predirect.cpp
+// by Lawrence McAlpin (admin@lmcalpin.com)
 //
+// Simply delegates execution to another executable indicated by a config file.  The
+// config file should be named with the name of the redirecting executable (the one you
+// get when you compile this solution) suffixed by ".predirect.config".  The contents
+// should simply be the name of the ACTUAL executable you want to run.
+// 
+// For example, if you want to alias "C:\programming\languages\jruby.exe" as "ruby.exe",
+// compile this solution, rename the resulting predirect.exe as ruby.exe, and create
+// a ruby.exe.predirect.config text file with "C:\programming\languages\jruby.exe" as
+// the sole contents.
+//
+// In other words, this is a poor man's symlink.  For executables only.  
+// 
+// Obviously, real symlinks are superior, but we're using Windows, and symlinks aren't
+// supported consistently, so here we are.
 
 #include "stdafx.h"
 #include <process.h>
